@@ -28,23 +28,24 @@ class ExtractorAgent(Agent):
         
         class EntityClaim(BaseModel):
             extracted: List[ExtractorResponse] | None = None
-        
+        self.memory.append({"role": "user", "content": message})
         for attempt in range(3):
             try:
                 res = get_completion(
                     model=self.model,
-                    messages=self.memory + [{"role": "user", "content": message}],
+                    messages=self.memory,
                     temperature=0.0,
                     response_format=EntityClaim,
                 )
                 res_ext = EntityClaim.model_validate_json(res.choices[0].message.content)  # validate response format
                 if not res_ext.extracted or len(res_ext.extracted) == 0:
                     logging.warning("Extractor did not find any entities or claims. Skipping to next agent.")
-                    
+                    self.memory.append({"role":"assistant", "content":"No entities extracted."})
                     return Action(
                         action_type="next_agent",
                         target_agent="questioner"
                     )
+                self.memory.append({"role":"assistant", "content":str([extracted.model_dump_json() for extracted in res_ext.extracted])})
                 return Action(
                     action_type="respond",
                     content = res_ext.extracted # list of ExtractorResponse
