@@ -55,6 +55,7 @@ class WebSearchAgent(Agent):
                 tool_name = tool_call['function']['name']
                 arguments = json.loads(tool_call['function']['arguments'])
                 return Action(
+                    agent=self.role,
                     action_type="tool_call",
                     tool_call=ToolCall(
                         tool_name=tool_name,
