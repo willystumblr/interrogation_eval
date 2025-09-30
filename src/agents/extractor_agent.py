@@ -42,11 +42,13 @@ class ExtractorAgent(Agent):
                     logging.warning("Extractor did not find any entities or claims. Skipping to next agent.")
                     self.memory.append({"role":"assistant", "content":"No entities extracted."})
                     return Action(
+                        agent=self.role,
                         action_type="next_agent",
                         target_agent="questioner"
                     )
                 self.memory.append({"role":"assistant", "content":str([extracted.model_dump_json() for extracted in res_ext.extracted])})
                 return Action(
+                    agent=self.role,
                     action_type="respond",
                     content = res_ext.extracted # list of ExtractorResponse
                 )
@@ -57,6 +59,7 @@ class ExtractorAgent(Agent):
                 time.sleep(1)  # brief pause before retrying
         logging.error("Failed to extract entity and claim after multiple attempts.")
         return Action(
+            agent=self.role,
             action_type="next_agent",
             target_agent="questioner"
         )    

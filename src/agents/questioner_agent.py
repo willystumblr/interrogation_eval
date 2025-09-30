@@ -42,5 +42,5 @@ class QuestionerAgent(Agent):
         )
         question = res.choices[0].message.content.strip()
         self.update_memory(role="assistant", content=question)
-        return Action(action_type="respond", content=question)
+        return Action(agent=self.role, action_type="respond", content=question)
 
