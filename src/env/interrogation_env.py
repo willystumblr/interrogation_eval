@@ -103,7 +103,7 @@ class InterrogationEnv:
 
     def step(self): # Interviewee's response -> Extractor -> WebSearch (optional) -> Questioner -> Interviewee
         """run one turn of the interrogation"""
-        message = self.state.history[-1].environment_observation[0].response.content # find interviewee_response (first index)
+        message = self.state.history[-1].environment_observation[-1].response.content # find interviewee_response (first index)
         if self.state.current_turn >= self.max_turns:
             logging.warning("Max turns reached. Please reset the environment.")
             return self.state, True, None
@@ -142,7 +142,7 @@ class InterrogationEnv:
             final_action = self.agents['questioner'].act(observation)
         else:
             final_action = self.agents['questioner'].act(
-                self.state.history[-1].environment_observation[0]
+                self.state.history[-1].environment_observation[-1]
             )
         logging.info(f"[ACTION] Questioner: {final_action.action_type} - {final_action.content if final_action.content else final_action.tool_call.tool_name}")
         if final_action.action_type != "respond" or final_action.content is None:
@@ -170,7 +170,7 @@ class InterrogationEnv:
         if 'filtered_actions' in locals():
             turn.agent_action.extend(filtered_actions) # include web search actions if any
         if 'observation' in locals():
-            turn.environment_observation.insert(0, observation) # tool output should come before interviewee response
+            turn.environment_observation.insert(0, observation) # tool output should come before interviewee response, hence the last element is interviewee response
         self.state.history.append(turn)
         done = self.state.current_turn >= self.max_turns
         return self.state, done
