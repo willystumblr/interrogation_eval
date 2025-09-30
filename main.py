@@ -1,3 +1,4 @@
+import os
 from src.utils import setup_logging, read_json, write_json
 from src.env.interrogation_env import InterrogationEnv
 from src.tools.web_search import GoogleClaimSearch
@@ -73,10 +74,10 @@ if __name__ == "__main__":
             env = InterrogationEnv(
                 tools={
                     "google_claim_search": GoogleClaimSearch(
-                        api_key='AIzaSyCD2qzXXcXIYiMz0UvdWZsJG8cfG9hW8rQ',
-                        cx='85a14976cb0f8401b'
+                        api_key=os.getenv('GOOGLE_API_KEY'),
+                        cx=os.getenv('GOOGLE_CX')
                     ),
-                    "google_geocode_validate": GoogleGeocodeValidate(api_key='AIzaSyCD2qzXXcXIYiMz0UvdWZsJG8cfG9hW8rQ')
+                    "google_geocode_validate": GoogleGeocodeValidate(api_key=os.getenv('GOOGLE_API_KEY'))
                 },
                 max_turns=args.num_turns,
                 **interviewee_kwarg
