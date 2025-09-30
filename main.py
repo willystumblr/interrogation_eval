@@ -6,13 +6,15 @@ from dotenv import load_dotenv
 from datasets import load_dataset
 import argparse
 import re
+import os
 import time
 import logging
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Run the interrogation environment.")
     parser.add_argument('--baseline_name', type=str, required=True, help='Baseline name for the interviewee simulator.')
-    parser.add_argument('--user_id', type=str, default=None, help='User ID for Character AI.')
+    #parser.add_argument('--user_id', type=str, default=None, help='User ID for Character AI.')
     parser.add_argument('--num_turns', type=int, default=30, help='Maximum number of turns in the interrogation.')
     parser.add_argument('--sample', action='store_true', help='Whether to sample OpenCharacter personas.')
     parser.add_argument('--seed', type=int, default=42, help='Random seed for sampling personas.')
@@ -28,13 +30,13 @@ if __name__ == "__main__":
     interviewee_kwargs = []
     # set up baseline interviewee simulator
     if args.baseline_name == "characterai":
-        assert args.user_id is not None, "Character AI requires user_id parameter"
+        assert os.getenv('CAI_API_KEY') is not None, "Character AI requires user_id parameter"
         personas = read_json("src/env/personas/characterai.json")
         for persona in personas:
             interviewee_kwargs.append({
                 "baseline_name": "characterai",
                 "character_id": persona['character_id'],
-                "user_id": args.user_id,
+                "user_id": os.getenv('CAI_API_KEY'), #args.user_id,
                 "name": persona['character_name']
             })    
     elif args.baseline_name == "human_simulacra":
@@ -73,10 +75,10 @@ if __name__ == "__main__":
             env = InterrogationEnv(
                 tools={
                     "google_claim_search": GoogleClaimSearch(
-                        api_key='AIzaSyCD2qzXXcXIYiMz0UvdWZsJG8cfG9hW8rQ',
-                        cx='85a14976cb0f8401b'
+                        api_key=os.getenv('GOOGLE_CLAIM_SEARCH'),
+                        cx=os.getenv('GOOGLE_CX_ID'),
                     ),
-                    "google_geocode_validate": GoogleGeocodeValidate(api_key='AIzaSyCD2qzXXcXIYiMz0UvdWZsJG8cfG9hW8rQ')
+                    "google_geocode_validate": GoogleGeocodeValidate(api_key=os.getenv('GOOGLE_GEOCODE'))
                 },
                 max_turns=args.num_turns,
                 **interviewee_kwarg
