@@ -221,14 +221,14 @@ if __name__ == "__main__":
     env = InterrogationEnv(
         baseline_name="characterai",
         character_id="6HhWfeDjetnxESEcThlBQtEUo0O8YHcXyHqCgN7b2hY", # example character id
-        user_id="087452473f5fd9941e6302f906b8fdf8ea8ffc14",
+        user_id="YOUR_USER_ID",
         name="Elon Musk",
         tools={
             "google_claim_search": GoogleClaimSearch(
-                api_key='AIzaSyCD2qzXXcXIYiMz0UvdWZsJG8cfG9hW8rQ',
-                cx='85a14976cb0f8401b'
+                api_key='YOUR_API_KEY',
+                cx='YOUR_CX'
             ),
-            "google_geocode_validate": GoogleGeocodeValidate(api_key='AIzaSyCD2qzXXcXIYiMz0UvdWZsJG8cfG9hW8rQ')
+            "google_geocode_validate": GoogleGeocodeValidate(api_key='YOUR_API_KEY')
         },
         max_turns=30
     )
