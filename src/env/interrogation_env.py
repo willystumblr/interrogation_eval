@@ -123,9 +123,17 @@ class InterrogationEnv:
                 return self.state, True
 
             list_of_extractions = [ext.model_dump() for ext in next_action.content] # list of ExtractorResponse
+            history = []
+            for turn in self.state.history:
+                # last element is interviewee response
+                qa_pair = turn.environment_observation[-1].response
+                history.append({
+                    "question": qa_pair.question,
+                    "answer": qa_pair.content
+                })
             # 2. Web Search (optional)
             with ThreadPoolExecutor(max_workers=len(list_of_extractions)) as executor:
-                web_search_actions = list(executor.map(self.agents['web_search'].act, list_of_extractions))
+                web_search_actions = list(executor.map(self.agents['web_search'].act, list_of_extractions, [history]*len(list_of_extractions)))
             filtered_actions = [action for action in web_search_actions if action and action.action_type == "tool_call"]
             
             if filtered_actions:

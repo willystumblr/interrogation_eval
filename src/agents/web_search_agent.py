@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 from src.agents.base_agent import Agent
 from src.schemas import Action, ToolCall
 from src.utils import get_completion
@@ -18,7 +18,7 @@ class WebSearchAgent(Agent):
     def set_cutoff_date(self, cutoff_date: str) -> None:
         self.cutoff_date = cutoff_date
     
-    def act(self, message: Dict) -> Action:
+    def act(self, message: Dict, history: List) -> Action:
         if not self.tools:
             return Action(
                 action_type="next_agent",
@@ -30,9 +30,13 @@ class WebSearchAgent(Agent):
         rationale = message.get('rationale', '')
         if entity != 'unknown entity' and claim != 'unknown claim':
             while True:
+                prompt = f"Conversation History:\n\n"
+                for qa in history:
+                    prompt += f"Interviewer: \"{qa['question']}\"\nInterviewee: \"{qa['answer']}\"\n\n"
+                prompt += f"Does the following claim-entity pair need to be verified with web-search?\nClaim: {claim}\nEntity: {entity}\nCutoff Date: {self.cutoff_date}"
                 res = get_completion(
                     model=self.model,
-                    messages=self.memory + [{"role": "user", "content": f"Does the following claim-entity pair need to be verified with web-search?\nClaim: {claim}\nEntity: {entity}\nCutoff Date: {self.cutoff_date}"}],
+                    messages=self.memory + [{"role": "user", "content": prompt}],
                     tool_choice="none",
                     tools=self.tools,
                     reasoning_effort="low",

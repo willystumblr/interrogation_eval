@@ -15,7 +15,6 @@ import logging
 def parse_args():
     parser = argparse.ArgumentParser(description="Run the interrogation environment.")
     parser.add_argument('--baseline_name', type=str, required=True, help='Baseline name for the interviewee simulator.')
-    #parser.add_argument('--user_id', type=str, default=None, help='User ID for Character AI.')
     parser.add_argument('--num_turns', type=int, default=30, help='Maximum number of turns in the interrogation.')
     parser.add_argument('--sample', action='store_true', help='Whether to sample OpenCharacter personas.')
     parser.add_argument('--seed', type=int, default=42, help='Random seed for sampling personas.')
