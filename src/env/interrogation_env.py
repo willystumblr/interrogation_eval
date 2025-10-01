@@ -39,7 +39,7 @@ class InterrogationEnv:
             baseline_name=baseline_name,
             **kwargs # simulator specific args (character_id, user_id, name for characterai; model_path, persona, profile for opencharacter; name for human_simulacra)
         )
-        self.max_turns = max_turns
+        self.max_turns = max_turns + 1
         self.predefined_questions = read_json(question_path)
         self.instruction = open(instruction_path).read()
         self.state = State(current_turn=0, history=[])
