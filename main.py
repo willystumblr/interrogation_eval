@@ -19,6 +19,7 @@ def parse_args():
     parser.add_argument('--sample', action='store_true', help='Whether to sample OpenCharacter personas.')
     parser.add_argument('--seed', type=int, default=42, help='Random seed for sampling personas.')
     parser.add_argument('--log_to_file', action='store_true', help='Whether to log to a file.')
+    parser.add_argument('--use_claim_extractor', action='store_true', help='Whether to use the claim extractor agent instead of the entity extractor agent.')
     
     return parser.parse_args()
 
@@ -37,12 +38,14 @@ if __name__ == "__main__":
                 "baseline_name": "characterai",
                 "character_id": persona['character_id'],
                 "user_id": os.getenv('CAI_API_KEY'), #args.user_id,
-                "name": persona['character_name']
+                "name": persona['character_name'],
+                "use_claim_extractor": args.use_claim_extractor
             })    
     elif args.baseline_name == "human_simulacra":
         interviewee_kwargs = [{
             "baseline_name": "human_simulacra",
-            "name": name
+            "name": name,
+            "use_claim_extractor": args.use_claim_extractor
         } for name in ["Mary Jones", "Haley Collins", "Sara Ochoa", "James Jones", "Tami Clark", "Michael Miller", "Kevin Kelly", "Erica Walker", "Leslie Nichols", "Robert Scott", "Marsh Zhaleh"]]
     elif args.baseline_name == "opencharacter":
         dataset = load_dataset("xywang1/OpenCharacter", "Synthetic-Character", split="train")
@@ -59,12 +62,14 @@ if __name__ == "__main__":
                 "persona": data['persona'],
                 "profile": data['character'],
                 "name": name_match.group(1).strip(),
-                "load_in_4bit": True
+                "load_in_4bit": True,
+                "use_claim_extractor": args.use_claim_extractor
             })
     elif args.baseline_name == "human_interview":
         interviewee_kwargs = [{
             "baseline_name": "human_interview",
-            "name": input("Enter your name: ")
+            "name": input("Enter your name: "),
+            "use_claim_extractor": args.use_claim_extractor
         }]
     else:
         raise ValueError("Invalid baseline name. Choose from ['characterai', 'human_simulacra', 'opencharacter', 'human_interview']")

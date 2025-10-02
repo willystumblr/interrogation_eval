@@ -30,7 +30,7 @@ class InterrogationEnv:
             project_root = os.path.dirname(os.path.dirname(current_dir))
             agents = {
                 "questioner": get_agent("questioner", f"{project_root}/src/agents/prompts/examiner_prompt_2.txt"),
-                "extractor": get_agent("extractor", f"{project_root}/src/agents/prompts/extractor_prompt_v2.txt"),
+                "extractor": get_agent("claim_extractor", f"{project_root}/src/agents/prompts/claim_extractor_prompt.txt") if kwargs.get('use_claim_extractor', True) else get_agent("entity_extractor", f"{project_root}/src/agents/prompts/extractor_prompt_v2.txt"),
                 "web_search": get_agent("web_search", f"{project_root}/src/agents/prompts/websearch_prompt.txt", tools=[tool.get_info() for tool in self.tools.values()])
             }
         self.agents = agents
