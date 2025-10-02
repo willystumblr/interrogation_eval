@@ -32,7 +32,7 @@ A single subject being interrogated.
   - RANGE_INTERPOLATED : Location is interpolated along a street segment between two known addresses.
   - GEOMETRIC_CENTER : Location represents the geometric center of a result such as a road, region, or place.
   - APPROXIMATE : Location is approximate, not exact.
-
+- If nothing is found in the search ⇒ Ask “No search result is found. Can you explain in more detail?”
 
 # Handling Refusals
 If the subject refuses for privacy or replies “[REDACTED]”, immediately rephrase to infer the fact indirectly via implication or context. Do not stop or summarize.

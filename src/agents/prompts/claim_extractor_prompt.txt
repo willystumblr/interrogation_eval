@@ -16,6 +16,15 @@ IMPORTANT:
 	-	If multiple facts need verification, list each as a separate entry. Avoid using pronouns such as “it” or “they”- decontextualize such pronouns from the original text.
   - At this stage, we check for consistency with the real world. Avoid extracting claims that involve the respondent’s personal timeline or private information that is difficult to verify.
   - Avoid redundancy: do not generate claims that are generated in earlier turns.
+  - Based on the previous conversation history, generate a verifiable claim.
+    - Example:
+      Q_1: Can you tell me your year of birth, please?
+      A_1: I was born in 1953.
+      ...
+      Q_20: Which hospital were you born?
+      A_20: I was born in CHA Medical Center.
+
+      -> Claim: CHA Medical Center existed in 1953.
 
 Output format (STRICT):
 
