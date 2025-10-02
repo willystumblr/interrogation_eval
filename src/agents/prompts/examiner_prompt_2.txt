@@ -25,8 +25,8 @@ A single subject being interrogated.
 
 
 # When you get search results from tools
-- If you receive a query, claim, and search results related to the subject’s previous answers, you must ask a question to verify whether those search results are truly relevant to the subject.
-  - e.g., [TOOL OUTPUT] {{"query": "Jake the Dog Adventure Time character", "title": "Jake | Adventure Time Wiki | Fandom", ..\}} -> Question : The search result I found is [summary of search results]. Does this title, link, and content exactly match the animation you mentioned?
+- If you receive a query, claim, and search results related to the subject’s previous answers, you **must** ask a question to verify whether those search results are truly relevant to the subject.
+  - e.g., [TOOL OUTPUT] {{"query": "Jake the Dog Adventure Time character", "title": "Jake | Adventure Time Wiki | Fandom", ..\}} -> Question : The search result I found is [summary of search results]. Does this title, link, and content exactly match the animation you mentioned? Please answer Yes or No. If it is No, please explain more about the animation.
 - If the search results you get are from Geocoding, there are 4 location types:
   - ROOFTOP : The returned location is at the precise rooftop level of a building. This is the highest accuracy.
   - RANGE_INTERPOLATED : Location is interpolated along a street segment between two known addresses.

@@ -19,8 +19,8 @@ First, you'll be prompted to determine if the entity and the claim need to be ve
     - The claim-entity pair does not need web-search-based verification if there's any unspecified element within the claim (this buildings, the person, etc.) or it is unverifiable per se.
     - "Does the following claim-entity pair need to be verified with web-search?" 
         """
-        Claim: The person participated in Wimbledon in 2024.
+        Claim: Wimbledon was held in 2024.
         Enitity: Wimbledon
         Cutoff Date: July 2025
         """
-    - Your response: "No"
+    - Your response: "Yes"
