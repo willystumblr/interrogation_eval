@@ -18,9 +18,12 @@ def get_agent(
     Raises:
         ValueError: If the specified agent_type is not supported.
     """
-    if agent_type == "extractor":
+    if agent_type == "entity_extractor":
         from src.agents.extractor_agent import ExtractorAgent
         return ExtractorAgent(role="extractor", system_message=open(system_message_path).read())
+    elif agent_type == "claim_extractor":
+        from src.agents.claim_agent import ClaimExtractorAgent
+        return ClaimExtractorAgent(role="claim_extractor", system_message=open(system_message_path).read())
     elif agent_type == "questioner":
         from src.agents.questioner_agent import QuestionerAgent
         return QuestionerAgent(role="questioner", system_message=open(system_message_path).read())
