@@ -25,30 +25,34 @@ class WebSearchAgent(Agent):
                 target_agent="questioner"
             )
         # for entity_claim in message:
-        entity = message.get('entity', 'unknown entity')
-        claim = message.get('claim', 'unknown claim')
+        entity = message.get('entity', 'no entity')
+        claim = message.get('claim', 'no claim')
         rationale = message.get('rationale', '')
-        if entity != 'unknown entity' and claim != 'unknown claim':
-            while True:
-                prompt = f"Conversation History:\n\n"
-                for qa in history:
-                    prompt += f"Interviewer: \"{qa['question']}\"\nInterviewee: \"{qa['answer']}\"\n\n"
-                prompt += f"Does the following claim-entity pair need to be verified with web-search?\nClaim: {claim}\nEntity: {entity}\nCutoff Date: {self.cutoff_date}"
-                res = get_completion(
-                    model=self.model,
-                    messages=self.memory + [{"role": "user", "content": prompt}],
-                    tool_choice="none",
-                    tools=self.tools,
-                    reasoning_effort="low",
-                )
-                res_ = res.choices[0].message.content.lower()
-                if res_ in ['yes', 'no']:
-                    break
-
-        if res_ == 'yes':
+        if entity != 'no entity':
+            prompt_format = f"Does the following claim-entity pair need to be verified with web-search?\nClaim: {claim}\nEntity: {entity}\nCutoff Date: {self.cutoff_date}"
+        else:
+            prompt_format = f"Does the following claim need to be verified with web-search?\nClaim: {claim}\nCutoff Date: {self.cutoff_date}"
+        while True:
+            prompt = f"Conversation History:\n\n"
+            for qa in history:
+                prompt += f"Interviewer: \"{qa['question']}\"\nInterviewee: \"{qa['answer']}\"\n\n"
+            prompt += prompt_format
             res = get_completion(
                 model=self.model,
-                messages=self.memory + [{"role": "user", "content": f"Given the entity: {entity}, and the claim: {claim}, with rationale: {rationale}, decide the best tool to use to verify the claim."}],
+                messages=self.memory + [{"role": "user", "content": prompt}],
+                tool_choice="none",
+                tools=self.tools,
+                reasoning_effort="low",
+            )
+            res_ = res.choices[0].message.content.lower()
+            if res_ in ['yes', 'no']:
+                break
+
+        if res_ == 'yes':
+            prompt = f"Given the entity: {entity}, and the claim: {claim}, with rationale: {rationale}, decide the best tool to use to verify the claim." if 'entity' in locals() else f"Given the claim: {claim}, with rationale: {rationale}, decide the best tool to use to verify the claim."
+            res = get_completion(
+                model=self.model,
+                messages=self.memory + [{"role": "user", "content": prompt}],
                 tool_choice="required",
                 tools=self.tools,
                 reasoning_effort="low",
