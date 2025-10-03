@@ -22,6 +22,7 @@ def get_completion(model: str, messages: list, temperature: float = 0.0, max_ret
                 temperature=temperature,
                 **kwargs
             )
+            assert response is not None and response.choices and response.choices[0].message and response.choices[0].message.content, "Invalid response from completion API"
             return response
         except Exception as e:
             logging.error(f"Error during completion: {e}")
