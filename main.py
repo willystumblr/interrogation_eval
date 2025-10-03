@@ -97,4 +97,6 @@ if __name__ == "__main__":
             env.save_state(result_path)
         except Exception as e:
             logging.exception(f"Error during session with interviewee {interviewee_kwarg.get('name', 'unknown')}, baseline: {interviewee_kwarg['baseline_name']}: {e}")
+            logging.info("Saving partial state...")
+            env.save_state(f"data/temp_results/{args.baseline_name}/{interviewee_kwarg.get('name', 'unknown').replace(' ', '_')}_error_{time.strftime('%Y-%m-%d_%H-%M-%S')}.json")
             continue

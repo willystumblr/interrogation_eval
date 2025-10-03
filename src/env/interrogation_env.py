@@ -103,7 +103,8 @@ class InterrogationEnv:
 
     def step(self): # Interviewee's response -> Extractor -> WebSearch (optional) -> Questioner -> Interviewee
         """run one turn of the interrogation"""
-        message = self.state.history[-1].environment_observation[-1].response.content # find interviewee_response (first index)
+        interviewee_res = self.state.history[-1].environment_observation[-1].response
+        message = f"Question:{interviewee_res.question}\nResponse: {interviewee_res.content}" # find interviewee_response (first index)
         if self.state.current_turn >= self.max_turns:
             logging.warning("Max turns reached. Please reset the environment.")
             return self.state, True, None

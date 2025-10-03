@@ -52,7 +52,7 @@ class WebSearchAgent(Agent):
             prompt = f"Given the entity: {entity}, and the claim: {claim}, with rationale: {rationale}, decide the best tool to use to verify the claim." if 'entity' in locals() else f"Given the claim: {claim}, with rationale: {rationale}, decide the best tool to use to verify the claim."
             res = get_completion(
                 model=self.model,
-                messages=self.memory + [{"role": "user", "content": prompt}],
+                messages=self.memory + [{"role": "user", "content": prompt}], # no memory needed
                 tool_choice="required",
                 tools=self.tools,
                 reasoning_effort="low",
